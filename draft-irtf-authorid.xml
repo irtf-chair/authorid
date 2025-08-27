@@ -60,7 +60,7 @@
         stable, globally unique, dereferenceable identifier for each
         author. As a pragmatic first step, this document defines a
         profile that uses Open Researcher and Contributor IDs (ORCIDs)
-        in the existing <xref target="RFC7991"/>
+        in the existing <xref target="RFCXML-VOCAB"/>
         <tt>&lt;email&gt;</tt> element of the <tt>&lt;author&gt;</tt>
         address block. It also discusses limitations of ORCID-specific
         identifiers and sketches options for a future
@@ -117,7 +117,7 @@
         <li>Enable straightforward consumption by tooling (xml2rfc,
         bibliographic exporters, indexes).</li>
         <li>Remain optional and privacy-aware; authors may opt in by
-        followin this convention.</li>
+        following this convention.</li>
       </ul>
       <t>Non-Goals:</t>
       <ul>
@@ -136,29 +136,23 @@
     </section>
 
     <section anchor="spec" title="Specification: Stable Author IDs in RFCXML">
+      <t>
+	The original <xref target="RFC7991"/> document type allowed
+	<strong>at most one</strong> <tt>&lt;email&gt;</tt> element
+	inside <tt>&lt;address&gt;</tt>. However in the <strong>
+	authoritative documentation</strong> of the RFCXML v3
+	vocabulary <xref target="RFCXML-VOCAB"/>, the content model of
+	the <tt>&lt;address&gt;</tt> element has been updated to allow
+	for multiple <tt>&lt;email&gt;</tt> elements, and the current
+	xml2rfc tool chain will accept multiple <tt>&lt;email&gt;</tt>
+	elements and render them, separated by commas.
+      </t>
+
       <section anchor="requirements" title="Requirements">
         <ol>
-<!--          <li>
-	    Per the RFCXML v3 schema, <strong>at most one</strong>
-	    <tt>&lt;uri&gt;</tt> is allowed inside
-	    <tt>&lt;address&gt;</tt>. Since the <tt>&lt;uri&gt;</tt>
-	    field is often used for homepage URIs, it could be
-	    disruptive to require changing such conventions. However,
-	    content model of the <tt>&lt;address&gt;</tt> elements
-	    allows for multiple occurance of the
-	    <tt>&lt;email&gt;</tt> element. 
-	  </li>
--->
           <li>
-	    Per the RFCXML v3 schema, <strong>at most one</strong>
-	    <tt>&lt;email&gt;</tt> is allowed inside
-	    <tt>&lt;address&gt;</tt>. However, the current xml2rfc
-	    tool chain will accept multiple <tt>&lt;email&gt;</tt>
-	    elements and render them, separated by commas.
-	  </li>
-	  
-          <li>
-	    Authors can individually decide whether they want to
+	    Internet Drafts <bcp14>MAY</bcp14> contain author
+	    ids. Authors can individually decide whether they want to
 	    include an author id as an ORCID in Internet Drafts and
 	    RFCS. If an author has a stable person identifier (i.e.,
 	    an ORCID) that they wish to associate with a document, the
@@ -181,11 +175,6 @@
 	    ORCID record matches the author to a reasonable degree.
 	  </li>
 
-          <li>
-	    Including a stable identifier is optional. Authors who do
-	    not wish to publish such an identifier <bcp14>MAY</bcp14>
-	    omit it.
-	  </li>
         </ol>
       </section>
 
@@ -242,8 +231,8 @@
       <section anchor="compat" title="Compatibility and Rendering">
         <t>
           This convention is NOT compatible with the current RFCXML v3
-          vocabulary (<xref target="RFC7991"/>), which only allows one
-          <tt>&lt;email&gt;</tt> element per
+          vocabulary (<xref target="RFCXML-VOCAB"/>), which only
+          allows one <tt>&lt;email&gt;</tt> element per
           <tt>&lt;address&gt;</tt>. However, the current xml2rfc and
           kramdown-rfc toolchain are accepting multiple
           <tt>&lt;email&gt;</tt> elements and render them correctly.
@@ -356,14 +345,15 @@ uri = element uri {
     <references title="Normative References">
       <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
       <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
-      <reference anchor="RFC7991" target="https://www.rfc-editor.org/rfc/rfc7991">
+
+      <reference anchor="RFCXML-VOCAB" target="https://authors.ietf.org/rfcxml-vocabulary">
         <front>
-          <title>RFC XML v3 (RFC 7991)</title>
-          <author fullname="Paul Hoffman" initials="P." surname="Hoffman"/>
-          <date month="December" year="2016"/>
+          <title>RFCXML Vocabulary Reference (v3)</title>
+          <author fullname="RFC Editor"/>
+          <date year="2025"/>
         </front>
-        <seriesInfo name="RFC" value="7991"/>
       </reference>
+      
     </references>
 
     <references title="Informative References">
@@ -374,6 +364,16 @@ uri = element uri {
           <date year="2025"/>
         </front>
       </reference>
+
+      <reference anchor="RFC7991" target="https://www.rfc-editor.org/rfc/rfc7991">
+        <front>
+          <title>RFC XML v3 (RFC 7991)</title>
+          <author fullname="Paul Hoffman" initials="P." surname="Hoffman"/>
+          <date month="December" year="2016"/>
+        </front>
+        <seriesInfo name="RFC" value="7991"/>
+      </reference>
+      
     </references>
 
     <section anchor="acks" title="Acknowledgments">
