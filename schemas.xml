@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <uri resource="draft-irtf-authorid.xml" uri="schemas/xml2rfc-v3-emacs-nxml.rnc"/>
+</locatingRules>

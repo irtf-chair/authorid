@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="schemas/xml2rfc-v3-emacs-nxml.rnc"
+            type="application/relax-ng-compact-syntax"?>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?>
+
+<rfc
+   	xmlns:xi="http://www.w3.org/2001/XInclude"
+   	version="3"
+    ipr="trust200902"
+    docName="draft-kutscher-authorid"
+    category="info"
+    submissionType="IRTF"
+    consensus="false"
+    sortRefs="true"
+    symRefs="true"
+    tocDepth="4">
+
+<front>
+
+    <title abbrev="Author IDs">
+    Stable Author IDs in RFCs</title>
+    <seriesInfo 
+    	name="Internet-Draft" 
+    	value="draft-kutscher-authorid"/>
+
+    <!-- add "role="editor"" below for the editors if appropriate -->
+
+    <author fullname="Dirk Kutscher" initials="D." surname="Kutscher">
+      <organization>HKUST(GZ)</organization>
+      <address>
+        <postal>
+<!--          <street>Nansha</street> -->
+          <!-- Reorder these if your country does things differently -->
+<!--          <code>26723</code> -->
+          <city>Guangzhou</city>
+          <country>China</country>
+        </postal>
+        <phone></phone>
+        <email>ietf@dkutscher.net</email>
+        <uri>https://orcid.org/0000-0002-9021-9916</uri>
+      </address>
+    </author>
+
+    <date year="2025" month="August" day="23"/>
+
+    <!-- Meta-data Declarations -->
+    <workgroup>ICNRG</workgroup>
+
+    <keyword>RFCs</keyword>
+    <keyword>Author IDs</keyword>
+
+
+    <abstract>
+      <t>
+        This document specifies conventions for including stable author identifiers in
+        Internet-Drafts and RFCs using the RFCXML v3 format. Because email addresses
+        and organizational affiliations can change over time, documents benefit from
+        a stable, globally unique, dereferenceable identifier for each author. As a
+        pragmatic first step, this document defines a profile that uses ORCID iDs in
+        the existing <xref target="RFC7991"/> <tt>&lt;uri&gt;</tt> element of the <tt>&lt;author&gt;</tt>
+        address block. It also discusses limitations of ORCID-specific identifiers and
+        sketches options for a future provider-independent approach.
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t>
+        Long-term discoverability, attribution, and disambiguation of authors are important
+        for the archival value of Internet-Drafts (I-Ds) and RFCs. Today, author identity
+        is primarily expressed using names and email addresses in RFCXML. However, names can
+        be non-unique or change over time, and email addresses frequently become invalid.
+        This document defines a simple convention to add a stable author identifier to each
+        author entry, without requiring changes to the RFCXML schema or publication tools.
+      </t>
+      <t>
+        The convention leverages ORCID iDs (<xref target="ORCID"/>) as stable person identifiers
+        and places the canonical ORCID HTTPS URI in the existing <tt>&lt;&gt;</tt> element within
+        the <tt>&lt;address&gt;</tt> of the <tt>&lt;author&gt;</tt>. This yields immediate benefits for
+        disambiguation and metadata linking while remaining backward compatible with existing
+        tooling and renderers.
+      </t>
+    </section>
+
+    <section anchor="goals" title="Goals and Non-Goals">
+      <t>Goals:</t>
+      <ul>
+        <li>Provide a stable, globally unique author identifier that complements names and email.</li>
+        <li>Use only existing RFCXML v3 elements; avoid schema or pipeline changes.</li>
+        <li>Enable straightforward consumption by tooling (xml2rfc, bibliographic exporters, indexes).</li>
+        <li>Remain optional and privacy-aware; authors may opt out.</li>
+      </ul>
+      <t>Non-Goals:</t>
+      <ul>
+        <li>Mandate a specific identity provider forever. ORCID is a pragmatic first step.</li>
+        <li>Replace author names or emails. This convention complements existing fields.</li>
+      </ul>
+    </section>
+
+    <section anchor="terminology" title="Terminology and Conventions">
+      <t>
+        The key words <bcp14>MUST</bcp14>, <bcp14>MUST NOT</bcp14>, <bcp14>SHOULD</bcp14>,
+        <bcp14>SHOULD NOT</bcp14>, and <bcp14>MAY</bcp14> in this document are to be interpreted
+        as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+        they appear in all capitals, as shown here.
+      </t>
+    </section>
+
+    <section anchor="spec" title="Specification: Stable Author IDs in RFCXML">
+      <section anchor="requirements" title="Requirements">
+        <ol>
+          <li>Per the RFCXML v3 schema, <strong>at most one</strong> <tt>&lt;uri&gt;</tt> is allowed inside <tt>&lt;address&gt;</tt>. This specification reserves that single <tt>&lt;uri&gt;</tt> for the author's <em>stable identifier</em> (e.g., an ORCID iD).</li>
+          <li>If an author has a stable person identifier (e.g., an ORCID iD), the author entry <bcp14>SHOULD</bcp14> include it as a URI in the <em>sole</em> <tt>&lt;uri&gt;</tt> child of the <tt>&lt;address&gt;</tt> element.</li>
+          <li>When using an ORCID iD, the value <bcp14>MUST</bcp14> be the canonical HTTPS form <tt>https://orcid.org/NNNN-NNNN-NNNN-NNNN</tt>, where the last character <bcp14>MAY</bcp14> be an <tt>X</tt> per ORCID’s checksum format.</li>
+          <li>Editors and tooling <bcp14>SHOULD</bcp14> verify that the ORCID URI resolves and that the displayed name on the ORCID record matches the author to a reasonable degree.</li>
+          <li>Including a stable identifier is optional. Authors who do not wish to publish such an identifier <bcp14>MAY</bcp14> omit it.</li>
+        </ol>
+      </section>
+
+      <section anchor="profile" title="ORCID-Based Pragmatic Profile">
+        <t>
+          This document defines an initial, provider-specific profile that uses ORCID iDs as the
+          stable author identifier. The canonical form is an HTTPS URI with the authority
+          <tt>orcid.org</tt> and a path consisting of four groups of four digits separated by hyphens,
+          optionally ending with an <tt>X</tt>. Example: <tt>https://orcid.org/0000-0002-1825-0097</tt>.
+        </t>
+        <t>
+          The ORCID URI is placed as the first <tt>&lt;uri&gt;</tt> element under <tt>&lt;address&gt;</tt>.
+          Renderers that implement this convention can treat the first <tt>&lt;uri&gt;</tt> as the
+          stable author ID, and may decorate it with an ORCID glyph or label when the URI host is
+          <tt>orcid.org</tt>.
+        </t>
+        <t>
+          Documents that include multiple authors repeat this convention for each <tt>&lt;author&gt;</tt>.
+        </t>
+      </section>
+
+      <section anchor="examples" title="Examples">
+        <t>Minimum example using only the stable ID:</t>
+        <sourcecode type="xml">
+&lt;author fullname="Ada Lovelace" initials="A." surname="Lovelace"&gt;
+  &lt;organization&gt;Analytical Engines Ltd.&lt;/organization&gt;
+  &lt;address&gt;
+    &lt;email&gt;ada@example.net&lt;/email&gt;
+    &lt;uri&gt;https://orcid.org/0000-0001-2345-678X&lt;/uri&gt;
+  &lt;/address&gt;
+&lt;/author&gt;
+        </sourcecode>
+        <t>Including a homepage pragmatically (outside &lt;address&gt;):</t>
+        <sourcecode type="xml">
+&lt;section anchor="author-urls" title="Additional Author URLs" numbered="false"&gt;
+  &lt;dl&gt;
+    &lt;dt&gt;Ada Lovelace&lt;/dt&gt;
+    &lt;dd&gt;Homepage: &lt;eref target="https://www.example.net/~ada/"/&gt;&lt;/dd&gt;
+  &lt;/dl&gt;
+&lt;/section&gt;
+        </sourcecode>
+        <t>Alternative using &lt;contact&gt; in an appendix (maps name to a single extra URI each):</t>
+        <sourcecode type="xml">
+&lt;section anchor="author-contacts" title="Author Contacts (Additional Links)" numbered="false"&gt;
+  &lt;contact fullname="Ada Lovelace"&gt;
+    &lt;address&gt;
+      &lt;email&gt;ada@example.net&lt;/email&gt;
+      &lt;uri&gt;https://www.example.net/~ada/&lt;/uri&gt; &lt;!-- homepage here; ORCID stays in author/address --&gt;
+    &lt;/address&gt;
+  &lt;/contact&gt;
+&lt;/section&gt;
+        </sourcecode>
+      </section>
+
+      <section anchor="tooling" title="Guidance for Editors and Tools">
+        <ul>
+          <li>Reserve the single <tt>&lt;uri&gt;</tt> within <tt>&lt;address&gt;</tt> for the stable author ID. Do <strong>not</strong> add additional <tt>&lt;uri&gt;</tt> elements there.</li>
+          <li><t>To expose additional author URLs (homepages, profiles), prefer one of:</t>
+            <ul>
+              <li>A short unnumbered section (e.g., “Additional Author URLs”) using <tt>&lt;dl&gt;</tt>/<tt>&lt;dt&gt;</tt>/<tt>&lt;dd&gt;</tt> with <tt>&lt;eref&gt;</tt> links.</li>
+              <li>An appendix listing <tt>&lt;contact&gt;</tt> blocks, each with an <tt>&lt;address&gt;</tt> whose sole <tt>&lt;uri&gt;</tt> is the homepage.</li>
+            </ul>
+          </li>
+          <li>xml2rfc and similar tools <bcp14>SHOULD</bcp14> preserve ordering of elements and avoid reordering.</li>
+        </ul>
+      </section>
+
+      <section anchor="compat" title="Compatibility and Rendering">
+        <t>
+          This convention requires no changes to the RFCXML v3 vocabulary (<xref target="RFC7991"/>).
+          Existing renderers that ignore additional <tt>&lt;uri&gt;</tt> elements will continue to produce
+          valid output. Renderers that wish to surface stable author IDs can choose to display the
+          first <tt>&lt;uri&gt;</tt> with an appropriate label or icon.
+        </t>
+      </section>
+
+      <section anchor="limits" title="Limitations of Using ORCID">
+        <ul>
+          <li><strong>Provider Dependence:</strong> ORCID is an external service; availability and policies are
+          outside the IETF stream’s control.</li>
+          <li><strong>Coverage:</strong> Not all contributors have ORCID iDs, and some may decline to maintain one.</li>
+          <li><strong>Record Accuracy:</strong> Although ORCID supports verification, some records may be sparse
+          or out of date. Editors <bcp14>SHOULD</bcp14> confirm that the ORCID appears to correspond to
+          the author.</li>
+          <li><strong>Linkability and Privacy:</strong> Publishing a stable identifier can ease cross-site linking of
+          an individual’s activity. Authors <bcp14>SHOULD</bcp14> be informed and <bcp14>MAY</bcp14> opt out.</li>
+          <li><strong>Multiple Profiles / Mergers:</strong> Rarely, authors may have multiple ORCID records or merge
+          records over time. The canonical HTTPS URI <bcp14>SHOULD</bcp14> be used, and updates handled in
+          subsequent document revisions as needed.</li>
+        </ul>
+      </section>
+
+      <section anchor="future" title="Toward Provider-Independent Stable IDs and RFCXML Evolution (Non‑Normative)">
+        <section anchor="future-options" title="Provider-Independent Options">
+          <t>
+            To avoid dependence on a single identity provider, the community may consider a future,
+            provider-independent mechanism. Potential options include (non-exhaustive):
+          </t>
+          <ul>
+            <li><strong>Typed URIs in RFCXML:</strong> Extend RFCXML to allow a dedicated, typed <tt>&lt;author-id&gt;</tt>
+            element with a <tt>type</tt> attribute (e.g., <tt>type="orcid"</tt>, <tt>type="did"</tt>,
+            <tt>type="acct"</tt>), enabling unambiguous interpretation without relying on position.</li>
+            <li><strong>Decentralized Identifiers (DIDs):</strong> Support <tt>did:</tt> URIs that resolve to signed
+            DID Documents (<xref target="DID-CORE"/>), allowing cryptographic proof of control.</li>
+            <li><strong>acct: URIs with WebFinger:</strong> Support <tt>acct:user@example.com</tt> with WebFinger
+            discovery (<xref target="WEBFINGER"/>) for provider neutrality while remaining email-adjacent.</li>
+            <li><strong>Multiple IDs with Preference:</strong> Allow multiple identifiers (e.g., ORCID and DID) with
+            an explicit preference or priority indicator.</li>
+            <li><strong>Verification Hooks:</strong> Define optional verification metadata (e.g., proof-of-possession
+            via OAuth/OpenID Connect or signed statements) for stronger binding between the document
+            author and the identifier.</li>
+          </ul>
+        </section>
+
+        <section anchor="rfcxml-evolution" title="Potential RFCXML Evolution (Allow Multiple URIs with Semantics)">
+          <t>
+            This document proposes an evolution path for RFCXML in which <tt>&lt;address&gt;</tt> may contain
+            multiple <tt>&lt;uri&gt;</tt> elements, and where <tt>&lt;uri&gt;</tt> carries a lightweight attribute to
+            indicate the intended semantics. This avoids overloading positional conventions and enables
+            tools to reliably distinguish a stable author identifier from other links.
+          </t>
+          <t><strong>Sketch of changes (Relax NG Compact, illustrative only):</strong></t>
+          <sourcecode type="rnc">
+address = element address {
+  postal?, phone?, email*, uri*,
+  # existing subelements continue as defined by RFCXML v3
+}
+
+uri = element uri {
+  attribute type { "authorid" | "homepage" | "profile" | "other" }?,
+  attribute scheme { "orcid" | "did" | "isni" | "researcherid" | "scopus" }?,
+  xsd:anyURI
+}
+
+# Additional semantic constraints (non-normative at this stage):
+#  - Exactly one uri[@type='authorid'] SHOULD appear per author.
+#  - Zero or more uri[@type='homepage'|'profile'|'other'] MAY appear.
+#  - When type='authorid', @scheme MAY indicate the identifier system; the URI itself
+#    SHOULD be canonical for that scheme (e.g., https://orcid.org/NNNN-... or did:... ).
+          </sourcecode>
+          <t><strong>Example (future-compatible, not valid in RFCXML v3):</strong></t>
+          <sourcecode type="xml">
+&lt;author fullname="Ada Lovelace" initials="A." surname="Lovelace"&gt;
+  &lt;organization&gt;Analytical Engines Ltd.&lt;/organization&gt;
+  &lt;address&gt;
+    &lt;email&gt;ada@example.net&lt;/email&gt;
+    &lt;uri type="authorid" scheme="orcid"&gt;https://orcid.org/0000-0001-2345-678X&lt;/uri&gt;
+    &lt;uri type="homepage"&gt;https://www.example.net/~ada/&lt;/uri&gt;
+    &lt;uri type="profile" scheme="github"&gt;https://github.com/ada&lt;/uri&gt;
+  &lt;/address&gt;
+&lt;/author&gt;
+          </sourcecode>
+          <t>
+            <strong>Backwards compatibility:</strong> Existing RFCXML v3 documents remain valid. Renderers that ignore
+            the new attributes still display clickable links. Tools that understand the <tt>type</tt> attribute can
+            reliably find the author’s stable identifier (<tt>type="authorid"</tt>) without depending on element order.
+          </t>
+        </section>
+      </section>
+    </section>
+
+    <section anchor="privacy" title="Privacy Considerations">
+      <t>
+        Stable identifiers increase the ease of correlating activity across venues. Working groups
+        and editors <bcp14>SHOULD</bcp14> inform authors about this implication. Publishing an identifier
+        is optional, and authors <bcp14>MAY</bcp14> omit or remove identifiers at their discretion in
+        subsequent revisions.
+      </t>
+    </section>
+
+    <section anchor="security" title="Security Considerations">
+      <t>
+        The main security consideration is misbinding—associating an identifier with the wrong person.
+        Editors and tools <bcp14>SHOULD</bcp14> perform basic validation (e.g., dereferencing the URI and
+        comparing displayed names) and avoid accepting identifiers that resolve to error pages or clearly
+        unrelated records. Typosquatting domains (e.g., lookalike hostnames) should be avoided.
+      </t>
+    </section>
+
+    <section anchor="iana" title="IANA Considerations">
+      <t>This document has no IANA actions.</t>
+    </section>
+  </middle>
+
+  <back>
+    
+    <references title="Normative References">
+      <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+      <reference anchor="RFC7991" target="https://www.rfc-editor.org/rfc/rfc7991">
+        <front>
+          <title>RFC XML v3 (RFC 7991)</title>
+          <author fullname="Paul Hoffman" initials="P." surname="Hoffman"/>
+          <date month="December" year="2016"/>
+        </front>
+        <seriesInfo name="RFC" value="7991"/>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      <reference anchor="ORCID" target="https://orcid.org/">
+        <front>
+          <title>ORCID: Connecting Research and Researchers</title>
+          <author fullname="ORCID, Inc."/>
+          <date year="2025"/>
+        </front>
+      </reference>
+      <reference anchor="DID-CORE" target="https://www.w3.org/TR/did-core/">
+        <front>
+          <title>Decentralized Identifiers (DIDs) v1.0</title>
+          <author fullname="W3C DID Working Group"/>
+          <date year="2022"/>
+        </front>
+      </reference>
+      <reference anchor="WEBFINGER" target="https://www.rfc-editor.org/rfc/rfc7033">
+        <front>
+          <title>WebFinger</title>
+          <author fullname="Paul E. Jones" initials="P." surname="Jones"/>
+          <date month="September" year="2013"/>
+        </front>
+        <seriesInfo name="RFC" value="7033"/>
+      </reference>
+      <reference anchor="RFCXML-VOCAB" target="https://authors.ietf.org/rfcxml-vocabulary">
+        <front>
+          <title>RFCXML Vocabulary Reference (v3)</title>
+          <author fullname="RFC Editor"/>
+          <date year="2025"/>
+        </front>
+      </reference>
+    </references>
+
+    <section anchor="acks" title="Acknowledgments">
+      <t>
+	Thanks to Carsten Bormann for bringing up the idea and to
+	Colin Perkins, Lixia Zhang and other IRSG members for their
+	contributions to the discussion.
+      </t>
+    </section>
+      <section anchor="appendix-rfcxml-evolution" title="Appendix A: RFCXML Evolution Ideas (Non‑Normative)">
+      <t>
+        This appendix consolidates potential schema evolutions discussed in the body of this document so
+        they can be referenced independently. These proposals are <em>non‑normative</em> and target a
+        future revision of RFCXML. Current RFCXML v3 remains the normative basis of this document.
+      </t>
+      <section anchor="app-multi-uri" title="A.1 Allow Multiple URIs in &lt;address&gt; with Semantics">
+        <t>
+          Permit multiple <tt>&lt;uri&gt;</tt> elements within <tt>&lt;address&gt;</tt>, each carrying a
+          lightweight <tt>type</tt> attribute that indicates semantics (e.g., <tt>authorid</tt>,
+          <tt>homepage</tt>, <tt>profile</tt>, <tt>other</tt>). An optional <tt>scheme</tt> attribute
+          can hint at the identifier system (e.g., <tt>orcid</tt>, <tt>did</tt>, <tt>isni</tt>).
+        </t>
+        <sourcecode type="rnc">
+# Illustrative only — not valid RFCXML v3
+address = element address {
+  postal?, phone?, email*, uri*
+}
+uri = element uri {
+  attribute type { "authorid" | "homepage" | "profile" | "other" }?,
+  attribute scheme { "orcid" | "did" | "isni" | "researcherid" | "scopus" }?,
+  xsd:anyURI
+}
+        </sourcecode>
+        <t>
+          <strong>Interoperability guidance:</strong> Tools should treat exactly one
+          <tt>uri[@type='authorid']</tt> as the stable identifier for de‑duplication and linking.
+          Other URIs are optional metadata. Renderers that lack support for the new attributes should
+          still display URIs as links, preserving backward compatibility.
+        </t>
+        <t><strong>Future-style example (not valid in RFCXML v3):</strong></t>
+        <sourcecode type="xml">
+&lt;author fullname="Ada Lovelace" initials="A." surname="Lovelace"&gt;
+  &lt;organization&gt;Analytical Engines Ltd.&lt;/organization&gt;
+  &lt;address&gt;
+    &lt;email&gt;ada@example.net&lt;/email&gt;
+    &lt;uri type="authorid" scheme="orcid"&gt;https://orcid.org/0000-0001-2345-678X&lt;/uri&gt;
+    &lt;uri type="homepage"&gt;https://www.example.net/~ada/&lt;/uri&gt;
+    &lt;uri type="profile" scheme="github"&gt;https://github.com/ada&lt;/uri&gt;
+  &lt;/address&gt;
+&lt;/author&gt;
+        </sourcecode>
+      </section>
+      <section anchor="app-author-id-element" title="A.2 Dedicated &lt;author-id&gt; Element">
+        <t>
+          Introduce a distinct <tt>&lt;author-id&gt;</tt> element under <tt>&lt;author&gt;</tt> to carry one or
+          more identifiers without overloading <tt>&lt;address&gt;</tt>. The element can have a <tt>type</tt>
+          attribute (e.g., <tt>orcid</tt>, <tt>did</tt>, <tt>isni</tt>) and contain the canonical URI as text.
+        </t>
+        <sourcecode type="rnc">
+# Illustrative only — not valid RFCXML v3
+author = element author {
+  (organization?, address?, author-id*, ...)
+}
+author-id = element author-id {
+  attribute type { "orcid" | "did" | "isni" | "researcherid" | "scopus" }?,
+  xsd:anyURI
+}
+        </sourcecode>
+        <t>
+          This keeps contact coordinates (<tt>&lt;address&gt;</tt>) separate from persistent identifiers and
+          supports multiple IDs by design.
+        </t>
+      </section>
+      <section anchor="app-alt-identifiers" title="A.3 Alternative Identifier Schemes">
+        <ul>
+          <li><strong>DID:</strong> Permit <tt>did:</tt> URIs and define best practices for referencing canonical forms.</li>
+          <li><strong>acct:</strong> Allow <tt>acct:user@example.com</tt> URIs and discovery via WebFinger.</li>
+          <li><strong>Multiple IDs:</strong> Allow multiple identifiers per author with an explicit priority indicator.</li>
+          <li><strong>Verification hooks:</strong> Optional metadata or workflows to verify control of the referenced identifier.</li>
+        </ul>
+      </section>
+      <section anchor="app-migration" title="A.4 Migration Considerations">
+        <ul>
+          <li>Define a default mapping from RFCXML v3 (single <tt>&lt;address&gt;/&lt;uri&gt;</tt>) to the future model
+            (e.g., become <tt>uri[@type='authorid']</tt> or an <tt>&lt;author-id type='…'&gt;</tt> entry).</li>
+          <li>Encourage renderers to surface the stable author identifier distinctly (icon/label) while
+            listing other links separately.</li>
+          <li>Maintain strict backward compatibility: documents written for v3 remain valid and renderable.</li>
+        </ul>
+      </section>
+    </section>
+
+   <section anchor="author-urls" title="Additional Author URLs" numbered="false">
+     <dl>
+       <dt>Dirk Kutscher</dt>
+       <dd>Homepage: <eref target="https://dirk-kutscher.info"/></dd>
+     </dl>
+   </section>
+
+
+    
+  </back>
+</rfc>
+
